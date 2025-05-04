@@ -1,8 +1,15 @@
 import sys
-from app.stuff.go import go
+
+from app.lib.init import parse_args
+from app.lib.srt_parser import SrtFileParser
+from app.subtitles.subtitles import SubtitlesClass
 
 def main():
-    go()
+    args = parse_args()
+    subtitles_object = SrtFileParser().parse_srt_file(args.file)
+    
+    s = SubtitlesClass(subtitles_object["subtitles"])
+    s.start()
 
 if __name__ == "__main__":
     sys.exit(main())
