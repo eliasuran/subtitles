@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 class TkWrapper:
     def __init__(self):
-        self.window_width = 1000
+        self.window_width = 1400
         self.window_height = 58
         self.settings_height = 118
         self.opacity = 0.9
-        self.x_position = 540
+        self.x_position = 300
         self.y_position = 900
 
         self.root = self.tk_init()
@@ -152,9 +152,9 @@ class TkWrapper:
         frame.pack(fill=tk.X, padx=10, pady=5)
         
         self.current_time_label = tk.Label(
-            frame, 
-            text="00:00", 
-            bg="black", 
+            frame,
+            text="00:00",
+            bg="black",
             fg="white"
         )
         self.current_time_label.pack(side=tk.LEFT, padx=5)
@@ -171,7 +171,8 @@ class TkWrapper:
             sliderrelief=tk.FLAT,
             sliderlength=10,
             troughcolor="#555555",
-            variable=self.timeline_var
+            variable=self.timeline_var,
+            showvalue=False
         )
         self.timeline.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
 

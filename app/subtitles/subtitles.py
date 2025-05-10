@@ -7,7 +7,8 @@ if TYPE_CHECKING:
 class Subtitles:
     def __init__(self, subtitles: List[Dict[str, Any]], tkw: 'TkWrapper'):
         self.subtitles = subtitles
-        self.start_time = time.time() * 1000
+        self.start_time = None
+        self.pause_start = 0
         self.current_subtitle_index = 0
         self.current_time = 0
         self.paused = False
@@ -16,6 +17,7 @@ class Subtitles:
         
         self.total_duration = self._calculate_total_duration()
         self.update_timeline()
+        self.play()
     
 
     def _calculate_total_duration(self) -> int:
@@ -26,7 +28,8 @@ class Subtitles:
 
     def update_subtitle(self):
         if not self.paused:
-            self.current_time = self.current_time + 50
+            if self.start_time is not None:
+                self.current_time = int(time.time() * 1000 - self.start_time)
             self.tkw.text_widget.config(state=tk.NORMAL)
             self.tkw.text_widget.delete(1.0, tk.END)
             
@@ -61,6 +64,12 @@ class Subtitles:
         self.current_subtitle_index = self._find_subtitle_index_for_time(position_ms)
         self.update_subtitle_display()
         self.update_timeline()
+
+        if self.paused:
+            self.pause_start = time.time() * 1000
+            self.start_time = time.time() * 1000 - self.current_time
+        else:
+            self.start_time = time.time() * 1000 - self.current_time
     
 
     def _find_subtitle_index_for_time(self, time_ms: int) -> int:
@@ -87,9 +96,14 @@ class Subtitles:
 
     def pause(self):
         self.paused = True
+        self.pause_start = time.time() * 1000
     
 
     def play(self):
+        if self.start_time is None:
+            self.start_time = time.time() * 1000 - self.current_time
+        else:
+            self.start_time += (time.time() * 1000 - self.pause_start)
         self.paused = False
     
 
